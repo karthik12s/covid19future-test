@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<head>
+  <title>{% block title %}{% endblock %}</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  <style media="screen">
+    body{
+      padding: 20px;
+    }
+
+    	body{
+    	padding: 20px;
+    }
+    #covid {
+    	height: 150px;
+    }
+    #ctext{
+    	font-size: 55px;
+    	text-align: right;
+    	color: #b23e3d;
+    	font-family: serif;
+    }
+    #nav-bar{
+    	background-color: #b23e3d;
+    	color: white;
+    	font-family: serif;
+    	height: 28px;
+    	font-size: 20px;
+    }
+    #nav-bar0{
+    	background-color: #b23e3d;
+    	color: white;
+    	font-family: serif;
+    	height: 26px;
+    	font-size: 18px;
+    }
+    #nav-bar img{
+    	height: 24px;
+    }
+    hr{
+    	margin: 0px;
+    	color: white;
+    	border: 0px;
+    	height: 1px;
+    }
+    .ni,.si,.nei,.ei,.wi {
+    	height: 28px;
+    	margin-bottom: 0px;
+    }
+
+    .dropni{
+    	padding-top: 0px;
+    	display: none;
+    	position: absolute;
+    	font-family: serif;
+    	max-width: 100px;
+    	box-shadow: 0px 20px 36px 0px;
+    	height: 19px;
+    	font-size: 15px;
+    }
+    .dropni a{
+    	color: white;
+    	padding: 1px 15px;
+    	text-align: right;
+    	background-color: #b23e3d;
+    	display: block;
+    }
+    .ni1{
+    	width: 100px;
+    	text-align: right;
+    	margin-bottom: 0px;
+    }
+    .dropni:hover ,.ni:hover + .dropni{
+    	display: block;
+    }
+    .ni1:hover + .dropni{
+    	display: block;
+    }
+    .dropsi{
+    	padding-top: 0px;
+    	display: none;
+    	position: absolute;
+    	font-family: serif;
+    	max-width: 100px;
+    	box-shadow: 0px 8px 16px 0px;
+    	height: 19px;
+    	font-size: 15px;
+    }
+    .dropsi a{
+    	color: white;
+    	padding: 1px 15px;
+    	background-color: #b23e3d;
+    	display: block;
+    }
+    .dropsi:hover ,.si:hover + .dropsi{
+    	display: block;
+    }
+    .dropwi{
+    	padding-top: 0px;
+    	display: none;
+    	position: absolute;
+    	font-family: serif;
+    	max-width: 100px;
+    	box-shadow: 0px 8px 16px 0px;
+    	height: 19px;
+    	font-size: 15px;
+    }
+    .dropwi a{
+    	color: white;
+    	padding: 1px 20px;
+    	background-color: #b23e3d;
+    	display: block;
+    }
+    .dropwi:hover ,.wi:hover + .dropwi{
+    	display: block;
+    }
+    .dropei{
+    	padding-top: 0px;
+    	display: none;
+    	position: absolute;
+    	font-family: serif;
+    	max-width: 100px;
+    	box-shadow: 0px 8px 16px 0px;
+    	height: 19px;
+    	font-size: 15px;
+    }
+    .dropei a{
+    	color: white;
+    	padding: 1px 20px;
+    	background-color: #b23e3d;
+    	display: block;
+    }
+    .dropei:hover ,.ei:hover + .dropei{
+    	display: block;
+    }
+    .dropnei{
+    	padding-top: 0px;
+    	display: none;
+    	position: absolute;
+    	font-family: serif;
+    	max-width: 100px;
+    	box-shadow: 0px 8px 16px 0px;
+    	height: 19px;
+    	font-size: 15px;
+    }
+    .dropnei a{
+    	color: white;
+    	padding: 1px 25px;
+    	background-color: #b23e3d;
+    	display: block;
+    }
+    .dropnei:hover ,.nei:hover + .dropnei{
+    	display: block;
+    }
+    canvas{
+      padding: 20px;
+    }
+    button{
+      margin-top: 20px;
+    }
+    table {
+            padding: 20px;
+            border-style: ridge;
+            border-color: black;
+            border-width: 2px;
+            text-align: center;
+            align-self: center;
+            margin-top: 20px;
+
+            }
+            td,th {
+                border-right:1px solid black;
+                border-bottom: 1px solid black;
+            }
+            th{
+                background-color: lightskyblue;
+            }
+            .abc{
+                background-color: lightskyblue;
+            }
+
+            #ta{
+              width: 50%;
+            }
+
+          .column {
+            float: left;
+            width: 25%;
+            padding: 0 5px;
+          }
+
+          .row {margin: 0 -5px;}
+
+          /* Clear floats after the columns */
+          .row:after {
+            content: "";
+            display: table;
+            clear: both;
+          }
+
+          /* Responsive columns */
+          @media screen and (max-width: 600px) {
+            .column {
+              width: 100%;
+              display: block;
+              margin-bottom: 10px;
+            }
+          }
+
+          /* Style the counter cards */
+          .card {
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            padding: 16px;
+            text-align: center;
+            background-color: #444;
+            color: white;
+            margin-top: 15px;
+          }
+          h1{
+            margin-top: 30px;
+          }
+
+          .fa {font-size:50px;}
+          #anc{
+            color: white;
+          }
+        .footer {
+          width: 100%;
+        }
+        #fot{
+          width: 100%;
+        }
+
+  </style>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>
+</head>
+<body>
+
+  {% block content%}{% endblock%}
+  <!-- <div class="footer">
+  	 <a href="https://github.com/karthik12s/covid19future"><button type="button" id="fot" class="btn btn-outline-dark"><i class="fa fa-github"></i>View On Github</button></a>
+  </div> -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+</body>
