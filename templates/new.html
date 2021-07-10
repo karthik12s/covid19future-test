@@ -128,12 +128,11 @@
 			<div class="column">
 		    <div class="card">
 		      <h3>Predicted Total cases</h3>
-		      <p>{{p[0]}}</p>
+		      <p>{{p}}</p>
 		    </div>
 		  </div>
 
-
-
+{{t}}
 <table id='ta'  class="table table-striped">
 <tr>
   <th>Date</th>
@@ -143,7 +142,7 @@
     {%for i in range(r-10,r)%}
     <tr>
       <td>{{ da[i+1]}}</td>
-      <td>{{or1[i][0]}}</td>
+      <td>{{or1[i]}}</td>
       <td>{{y[i]}}</td>
     </tr>
     {%endfor%}

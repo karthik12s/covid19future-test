@@ -3,8 +3,12 @@ from sklearn import linear_model
 from flask import Flask, redirect, url_for,session,request,render_template,session,flash
 import numpy as np
 import pandas as pd
+from datetime import timedelta
+import datetime
+from statsmodels.tsa.ar_model import AutoReg
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import PolynomialFeatures
+import math
 wc=requests.get('https://api.covid19api.com/summary')
 wc=wc.json()
 ind=wc['Countries'][76]
@@ -13,63 +17,19 @@ app=Flask(__name__)
 app.secret_key='abc'
 a=pd.read_csv('https://api.covid19india.org/csv/latest/state_wise_daily.csv')
 c=a[::3]
+thres = datetime.datetime(2020,3,14)
+def cost(ytt,st):
+    co = 0
+    for i in range(len(st)):
+        co = co + (st[i]-ytt[i])*(st[i]-ytt[i])
+    return math.sqrt(co)
 def date1(a):
-    st=''
-    if a<92:
-        st=str(a[0]-60)+'-Mar-20'
-        return st
-    if a<122:
-        st=str(a[0]-91)+'-Apr-20'
-        return st
-    if a<153:
-        st=str(a[0]-121)+'-May-20'
-        return st
-    if a<184:
-        st=str(a[0]-152)+'-Jun-20'
-        return st
-    if a<215:
-        st=str(a[0]-183)+'-Jul-20'
-        return st
-    if a<246:
-        st=str(a[0]-214)+'-Aug-20'
-        return st
-    if a<277:
-        st=str(a[0]-245)+'-Sep-20'
-        return st
-    if a<308:
-        st=str(a[0]-276)+'-Oct-20'
-        return st
-    if a<338:
-        st=str(a[0]-307)+'-Nov-20'
-        return st
-    if a<368:
-        st=str(a[0]-337)+'-Dec-20'
-        return st
-    if a<399:
-        st=str(a[0]-367)+'-Jan-21'
-        return st
-    if a<430:
-        st=str(a[0]-398)+'-Feb-21'
-        return st
-    if a<461:
-        st=str(a[0]-429)+'-Mar-21'
-        return st
-    if a<488:
-        st = str(a[0]-457)+'-April-21'
-        return st
-    if a<519:
-        st = str(a[0]-487)+'-May-21'
-        return st
-    if a<551:
-        st = str(a[0]-519)+'-June-21'
-        return st
-    if a<581:
-        st = str(a[0]-548)+'-July-21'
-        return st
-    if a<612:
-        st = str(a[0]-580)+'-August-21'
-        return st
-
+    d = thres + timedelta(days = int(a[0]))
+    d = str(d).split()[0]
+    d = d.split("-")
+    s = str(d[2])+"-"+str(d[1])+"-"+str(d[0])
+    # print(s)
+    return s
 @app.route("/")
 @app.route("/<name>")
 def home(name=None):
@@ -80,20 +40,31 @@ def home(name=None):
         day=[]
         for i in range(len(st)):
             # st.append(c[i][name])
-            day.append(i+75)
+            day.append(i)
         day=(np.array(day)).reshape(-1,1)
-        x1=(np.arange(75,len(day)+90)).reshape(-1,1)
+        x1=(np.arange(len(day)+15)).reshape(-1,1)
         st=list(map(int,st))
-        for i in range(1,len(st)):
-            st[i]=st[i]+st[i-1]
+
+        # for i in range(1,len(st)):
+        #     st[i]=st[i]+st[i-1]
         # st=(np.array(st)).reshape(-1,1)
         # mo=PolynomialFeatures(degree=10)
         # new2=mo.fit_transform(day,st)
         # xtt=mo.transform(x1)
         # tt=linear_model.LinearRegression()
-        tt = RandomForestRegressor()
-        tt.fit(day,st)
-        ytt=tt.predict(x1)
+
+        # tt = RandomForestRegressor()
+        # tt.fit(day,st)
+        # ytt=tt.predict(x1)
+        model = AutoReg(st, lags=1)
+        model_fit = model.fit()
+        # print(len(x1),type(x1),x1[0])
+        ytt = []
+        # print(model_fit.predict(1,1))
+        for i in range(len(x1)):
+            ytt.append(model_fit.predict(i+1,i+1))
+        # print(ytt)
+        # print(len(ytt),len(x1))
         for i in range(len(ytt)):
             ytt[i]=int(ytt[i])
         if name=='tt':
@@ -101,7 +72,7 @@ def home(name=None):
         else:
             for i in range(len(s_d)):
                 if s_d['State'][i]==s_keys[name]:
-                    wc=[s_d['Confirmed'][i],s_d['Deaths'][i],s_d['Recovered'][i],st[len(c)-1][0]-st[len(c)-2][0]]
+                    wc=[s_d['Confirmed'][i],s_d['Deaths'][i],s_d['Recovered'][i],st[len(c)-1]]
 
         #ytt=list(map(int,ytt))
         # print(type(ytt))
@@ -109,7 +80,8 @@ def home(name=None):
         for i in range(len(ytt)):
             if ytt[i]<0:
                 ytt[i]=0
-        return render_template('new.html',da=list(map(date1,x1)),y=ytt,r=len(day),or1=st,l=len(x1),d1=x1,labels=list(map(date1,x1))[::15],values=ytt[::15],max=max(ytt),values1=st[::15],im=stateDict[name],sn=namesDict[name],wc=wc,p=ytt[len(c)])
+        t= cost(ytt,st)
+        return render_template('new.html',da=list(map(date1,x1)),y=ytt,r=len(day),or1=st,l=len(x1),d1=x1,labels=list(map(date1,x1))[::15],values=ytt[::15],max=max(ytt),values1=st[::15],im=stateDict[name],sn=namesDict[name],wc=wc,p=ytt[len(c)-1],t=t)
     else:
         return redirect(url_for('home'))
 
