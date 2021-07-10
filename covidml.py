@@ -17,6 +17,8 @@ app=Flask(__name__)
 app.secret_key='abc'
 a=pd.read_csv('https://api.covid19india.org/csv/latest/state_wise_daily.csv')
 c=a[::3]
+deceased1 = a[2::3]
+recovered1 = a[1::3]
 thres = datetime.datetime(2020,3,14)
 def cost(ytt,st):
     co = 0
@@ -37,6 +39,8 @@ def home(name=None):
         name='tt'
     if name in namesDict:
         st=list(c[name.upper()])
+        deceased = list(deceased1[name.upper()])
+        recovered = list(recovered1[name.upper()])
         day=[]
         for i in range(len(st)):
             # st.append(c[i][name])
@@ -81,7 +85,7 @@ def home(name=None):
             if ytt[i]<0:
                 ytt[i]=0
         t= cost(ytt,st)
-        return render_template('new.html',da=list(map(date1,x1)),y=ytt,r=len(day),or1=st,l=len(x1),d1=x1,labels=list(map(date1,x1))[::15],values=ytt[::15],max=max(ytt),values1=st[::15],im=stateDict[name],sn=namesDict[name],wc=wc,p=ytt[len(c)-1],t=t)
+        return render_template('new.html',da=list(map(date1,x1)),y=ytt,r=len(day),or1=st,l=len(x1),d1=x1,labels=list(map(date1,x1))[::15],values=ytt[::15],max=max(ytt),values1=st[::15],im=stateDict[name],sn=namesDict[name],wc=wc,p=ytt[len(c)-1],t=t,deceased = deceased[::15],dec_max = max(deceased),recovered = recovered[::15],rec_max = max(recovered))
     else:
         return redirect(url_for('home'))
 

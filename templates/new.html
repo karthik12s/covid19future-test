@@ -95,6 +95,9 @@
 			<img id="ind" src="https://lh3.googleusercontent.com/C4_iGhxNsSSwJvlo_2RuuxzCGVyEMtuhCTaVmGTNn5F1PFQFoh214a61X0kJdB0zaQgZvwAxyCiOFGOyF3jenp9HZNQ3vwSiOMRiq_-AEEtJR5Iw71KpjSxsMJhRaWegYtX1u7G4qj0">
 		</div>
 		<canvas id="chart" width="600" height="400"></canvas>
+		<canvas id="deceased" width="600" height="400"></canvas>
+		<canvas id="confirmed" width="600" height="400"></canvas>
+		<canvas id="recovered" width="600" height="400"></canvas>
 		<img src="{{im}}"  width="500px" height="350px">
 		<div class="row">
 		  <div class="column">
@@ -239,5 +242,149 @@
     }
      });
 
+		 var deceased = document.getElementById("deceased").getContext("2d");
+		 var deceasedData = {
+			 labels : [
+				 {% for item in labels %}
+					 "{{ item }}",
+				 {% endfor %}
+			 ],
+
+			 datasets : [{
+				label: "Actual",
+				 fillColor: "rgba(253,153,153,0.2)",
+				 strokeColor: "rgba(253,153,153,1)",
+				 pointColor: "rgba(253,153,153,1)",
+				 pointStrokeColor: "#fff",
+				 pointHighlightFill: "#fff",
+				 pointHighlightStroke: "rgba(151,187,205,1)",
+				 bezierCurve : false,
+				 data : [
+		 {% for item in deceased %}
+						 {{ item }},
+					 {% endfor %}]
+				 }]
+		 }
+		 var LineChartDemo = new Chart(deceased).Line(deceasedData, {
+			 options: {
+        title: {
+            display: true,
+            text: 'TEST'
+        }
+    } ,
+       scaleOverride: true,
+       scaleSteps: steps,
+       scaleStepWidth: Math.ceil({{dec_max}} / steps),
+       scaleStartValue: 0,
+       scaleShowVerticalLines: true,
+       scaleShowGridLines : true,
+       barShowStroke : true,
+       scaleShowLabels: true,
+       bezierCurve: false,
+			 legend: {
+            position: 'top',
+						display: true,
+            labels: {
+                fontColor: 'rgb(255, 99, 132)'
+            }
+        },
+				title: {
+      display: true,
+      text: 'Deseased Cases'
+    }
+     });
+
+
+		 var confirmed = document.getElementById("confirmed").getContext("2d");
+		 var confirmedData = {
+			 labels : [
+				 {% for item in labels %}
+					 "{{ item }}",
+				 {% endfor %}
+			 ],
+
+			 datasets : [{
+				label: "Actual",
+				 fillColor: "rgba(253,153,153,0.2)",
+				 strokeColor: "rgba(253,153,153,1)",
+				 pointColor: "rgba(253,153,153,1)",
+				 pointStrokeColor: "#fff",
+				 pointHighlightFill: "#fff",
+				 pointHighlightStroke: "rgba(151,187,205,1)",
+				 bezierCurve : false,
+				 data : [
+		 {% for item in values1 %}
+						 {{ item }},
+					 {% endfor %}]
+				 }]
+		 }
+		 var LineChartDemo = new Chart(confirmed).Line(confirmedData, {
+       scaleOverride: true,
+       scaleSteps: steps,
+       scaleStepWidth: Math.ceil(max/ steps),
+       scaleStartValue: 0,
+       scaleShowVerticalLines: true,
+       scaleShowGridLines : true,
+       barShowStroke : true,
+       scaleShowLabels: true,
+       bezierCurve: false,
+			 legend: {
+            position: 'top',
+						display: true,
+            labels: {
+                fontColor: 'rgb(255, 99, 132)'
+            }
+        },
+				title: {
+      display: true,
+      text: 'Deseased Cases'
+    }
+     });
+
+		 var recovered = document.getElementById("recovered").getContext("2d");
+		 var recoveredData = {
+			 labels : [
+				 {% for item in labels %}
+					 "{{ item }}",
+				 {% endfor %}
+			 ],
+
+			 datasets : [{
+				label: "Actual",
+				 fillColor: "rgba(253,153,153,0.2)",
+				 strokeColor: "rgba(253,153,153,1)",
+				 pointColor: "rgba(253,153,153,1)",
+				 pointStrokeColor: "#fff",
+				 pointHighlightFill: "#fff",
+				 pointHighlightStroke: "rgba(151,187,205,1)",
+				 bezierCurve : false,
+				 data : [
+		 {% for item in recovered %}
+						 {{ item }},
+					 {% endfor %}]
+				 }]
+		 }
+		 var LineChartDemo = new Chart(recovered).Line(recoveredData, {
+       scaleOverride: true,
+       scaleSteps: steps,
+       scaleStepWidth: Math.ceil({{rec_max}}/ steps),
+       scaleStartValue: 0,
+       scaleShowVerticalLines: true,
+       scaleShowGridLines : true,
+       barShowStroke : true,
+       scaleShowLabels: true,
+       bezierCurve: false,
+			 legend: {
+            position: 'top',
+						display: true,
+            labels: {
+                fontColor: 'rgb(255, 99, 132)'
+            }
+        },
+				title: {
+      display: true,
+      text: 'Deseased Cases'
+    }
+     });
    </script>
     {%endblock%}
