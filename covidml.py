@@ -6,6 +6,8 @@ import pandas as pd
 from datetime import timedelta
 import datetime
 from statsmodels.tsa.ar_model import AutoReg
+from statsmodels.tsa.arima.model import ARIMA
+from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import PolynomialFeatures
 import math
@@ -32,6 +34,156 @@ def date1(a):
     s = str(d[2])+"-"+str(d[1])+"-"+str(d[0])
     # print(s)
     return s
+models = ["Random Forest Regressor","Polynomial Regressor","Decision Tree Regressor","Auto regression","Moving Average","Autoregressive Moving Average","Autoregressive Integrated Moving Average"]
+def predict(st,day,x1,n):
+    if n==1:
+        st=(np.array(st)).reshape(-1,1)
+        day=(np.array(day)).reshape(-1,1)
+
+        #Random Forest
+        tt = RandomForestRegressor()
+        tt.fit(day,st)
+        ytt=tt.predict(x1)
+        ytt = list(ytt)
+        return ytt
+    if n==2:
+        st=(np.array(st)).reshape(-1,1)
+        day=(np.array(day)).reshape(-1,1)
+        mo=PolynomialFeatures(degree=6)
+        new2=mo.fit_transform(day,st)
+        xtt=mo.transform(x1)
+        tt=linear_model.LinearRegression()
+        tt.fit(new2,st)
+        ytt=tt.predict(xtt)
+        ytt = list(ytt)
+        return ytt
+    if n==3:
+        st=(np.array(st)).reshape(-1,1)
+        day=(np.array(day)).reshape(-1,1)
+
+        #Random Forest
+        tt = DecisionTreeRegressor()
+        tt.fit(day,st)
+        ytt=tt.predict(x1)
+        ytt = list(ytt)
+        return ytt
+    if n==4:
+        # Autoregression
+        model = AutoReg(st,lags = 1)
+        model_fit = model.fit()
+        ytt = []
+        for i in range(len(x1)):
+            ytt.append(model_fit.predict(i+1,i+1))
+        return ytt
+    if n==5:
+        # Moving Average
+        model = ARIMA(st, order=(0, 0, 1))
+        model_fit = model.fit()
+        ytt = []
+        for i in range(len(x1)):
+            ytt.append(model_fit.predict(i+1,i+1))
+        return ytt
+    if n==6:
+        # Autoregressive Moving Average
+        model = ARIMA(st, order=(2, 0, 1))
+        model_fit = model.fit()
+        ytt = []
+        for i in range(len(x1)):
+            ytt.append(model_fit.predict(i+1,i+1))
+        return ytt
+    if n==7:
+        model = ARIMA(st, order=(1, 1, 1))
+        model_fit = model.fit()
+        ytt = []
+        for i in range(len(x1)):
+            ytt.append(model_fit.predict(i+1,i+1))
+        return ytt
+
+@app.route("/results")
+def results():
+    ytt12 = {}
+    st12 = {}
+    t12 = {}
+    day12 = {}
+    max12 = {}
+    values2 = {}
+    values12 = {}
+    names = ['tt','tg','ap']
+    for j in range(1,8):
+        ytt1 = {}
+        st1 = {}
+        t1 = {}
+        day1 = {}
+        max1 = {}
+        values = {}
+        values1 = {}
+        for name in names:
+            st = list(c[name.upper()])
+            # print(st)
+            day = []
+            for i in range(len(st)):
+                day.append(i)
+            x1 = np.arange(len(day)+15).reshape(-1,1)
+            st = list(map(int,st))
+
+            # Autoregression
+            # model = AutoReg(st,lags = 1)
+            # model_fit = model.fit()
+
+            # Moving Average
+            # model = ARIMA(st, order=(0, 0, 1))
+            # model_fit = model.fit()
+
+            # Autoregressive Moving Average
+            # model = ARIMA(st, order=(2, 0, 1))
+            # model_fit = model.fit()
+
+            # Autoregressive Integrated Moving Average
+            # model = ARIMA(st, order=(1, 1, 1))
+            # model_fit = model.fit()
+            #
+            # ytt = []
+            # for i in range(len(x1)):
+            #     ytt.append(model_fit.predict(i+1,i+1))
+
+            # st=(np.array(st)).reshape(-1,1)
+            # day=(np.array(day)).reshape(-1,1)
+
+            #Random Forest
+            # tt = RandomForestRegressor()
+            # tt.fit(day,st)
+
+            # mo=PolynomialFeatures(degree=6)
+            # new2=mo.fit_transform(day,st)
+            # xtt=mo.transform(x1)
+            # tt=linear_model.LinearRegression()
+            # tt.fit(new2,st)
+            # ytt=tt.predict(xtt)
+            ytt = predict(st,day,x1,j)
+            # print(j)
+            # print(i)
+            ytt = list(ytt)
+            for i in range(len(ytt)):
+                if ytt[i]<0:
+                    ytt[i]=0
+            t= cost(ytt,st)
+            ytt1[name]=ytt
+            st1[name]=st
+            t1[name]=t
+            max1[name]=max(max(ytt),max(st))
+            day1 = x1
+            values[name]=ytt[::15]
+            values1[name]=st[::15]
+        t12[j] = t1
+        ytt12[j] = ytt1
+        st12[j]=st1
+        t12[j]=t1
+        day12[j]=day1
+        max12[j]=max1
+        values2[j]=values
+        values12[j]=values1
+        # print(max1)
+    return render_template("results.html",da=list(map(date1,x1)),labels=list(map(date1,x1))[::15],values=values2,max=max12,values1=values12,names = names,models = models,t = t12)
 @app.route("/")
 @app.route("/<name>")
 def home(name=None):
@@ -85,7 +237,7 @@ def home(name=None):
             if ytt[i]<0:
                 ytt[i]=0
         t= cost(ytt,st)
-        return render_template('new.html',da=list(map(date1,x1)),y=ytt,r=len(day),or1=st,l=len(x1),d1=x1,labels=list(map(date1,x1))[::15],values=ytt[::15],max=max(ytt),values1=st[::15],im=stateDict[name],sn=namesDict[name],wc=wc,p=ytt[len(c)-1],t=t,deceased = deceased[::15],dec_max = max(deceased),recovered = recovered[::15],rec_max = max(recovered))
+        return render_template('new.html',da=list(map(date1,x1)),y=ytt,r=len(day),or1=st,l=len(x1),d1=x1,labels=list(map(date1,x1))[::15],values=ytt[::15],max=max(ytt),values1=st[::15],im=stateDict[name],sn=namesDict[name],wc=wc,p=ytt[len(c)-1],t=t,deceased = deceased[::15],dec_max = max(deceased),recovered = recovered[::15],rec_max = max(recovered),dec = deceased,rec = recovered)
     else:
         return redirect(url_for('home'))
 

@@ -1,0 +1,100 @@
+{% extends "main1.html" %}
+{% block title %}Results{% endblock%}
+{%block content%}
+{% with messages=get_flashed_messages() %}
+{%if messages%}
+<p>{{messages[0]}}</p>
+{% endif %}
+{% endwith  %}
+{%for j in [1,2,3,4,5,6,7]%}
+{{models[j-1]}}
+
+{%for i in names%}
+<h1>{{t[j][i]}}</h1>
+<canvas id="chart{{i}}{{j}}" width="600" height="400"></canvas>
+<!-- <p>{{max[i]}}</p> -->
+{%endfor%}
+<h1>----------------------------------------------------------------------</h1>
+{%endfor%}
+<script type="text/javascript">
+  {%for j in [1,2,3,4,5,6,7]%}
+  {%for i in names%}
+  var barData = {
+    labels : [
+      {% for item in labels %}
+        "{{ item }}",
+      {% endfor %}
+    ],
+
+    datasets : [{
+      label: "Actual",
+      fillColor: "rgba(253,153,153,0.2)",
+      strokeColor: "rgba(253,153,153,1)",
+      pointColor: "rgba(253,153,153,1)",
+      pointStrokeColor: "#fff",
+      pointHighlightFill: "#fff",
+      pointHighlightStroke: "rgba(151,187,205,1)",
+      bezierCurve : false,
+      data : [
+  {% for item in values1[j][i] %}
+          {{ item }},
+        {% endfor %}]
+      },{
+        label:"Predicted",
+        fillColor: "rgba(151,187,205,0.2)",
+        strokeColor: "rgba(151,187,205,1)",
+        pointColor: "rgba(151,187,205,1)",
+        pointStrokeColor: "#fff",
+        pointHighlightFill: "#fff",
+        pointHighlightStroke: "rgba(151,187,205,1)",
+        bezierCurve : false,
+        data : [
+    {% for item in values[j][i] %}
+            {{ item }},
+          {% endfor %}]
+        }
+  ]
+  }
+
+  Chart.defaults.global.animationSteps = 50;
+  Chart.defaults.global.tooltipYPadding = 16;
+  Chart.defaults.global.tooltipCornerRadius = 0;
+  Chart.defaults.global.tooltipTitleFontStyle = "normal";
+  Chart.defaults.global.tooltipFillColor = "rgba(0,0,0,0.8)";
+  Chart.defaults.global.animationEasing = "easeOutBounce";
+  Chart.defaults.global.responsive = false;
+  Chart.defaults.global.scaleLineColor = "black";
+  Chart.defaults.global.scaleFontSize = 16;
+
+  // get bar chart canvas
+  var mychart = document.getElementById("chart{{i}}{{j}}").getContext("2d");
+
+  steps = 10;
+  max = {{ max[j][i] }};
+  // draw bar chart
+  var LineChartDemo = new Chart(mychart).Line(barData, {
+    scaleOverride: true,
+    scaleSteps: steps,
+    scaleStepWidth: Math.ceil(max / steps),
+    scaleStartValue: 0,
+    scaleShowVerticalLines: true,
+    scaleShowGridLines : true,
+    barShowStroke : true,
+    scaleShowLabels: true,
+    bezierCurve: false,
+    legend: {
+         position: 'top',
+         display: true,
+         labels: {
+             fontColor: 'rgb(255, 99, 132)'
+         }
+     },
+     title: {
+   display: true,
+   text: 'World population per region (in millions)'
+  }
+  });
+  {%endfor%}
+  {%endfor%}
+</script>
+{%endblock%}

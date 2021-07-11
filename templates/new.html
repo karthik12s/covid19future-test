@@ -7,93 +7,7 @@
 {% endif %}
 {% endwith  %}
 
-<div class="row" id="row">
-		<div class="col-md-9" id="col1">
-			<div class="row">
-			<div class="col-md-9">
-			<img id="covid" src="https://lh3.googleusercontent.com/z3AWitrKeKVqOr0kGaVW3qbaiEUbd8JieD_rEgrDmpp-qN9fgxaxQT73PtYtPlIkIGoH2rMY6Xtz47Lhi5I5yeG2wdmmFwpOKL8MdBxo7Zv1N6eDfohLxHDh5dr7ala8fNzP_4E_i28">
-			</div>
-			</div>
-			<div class="row" >
-				<div class="col-md-12">
-					<p id="ctext">India Future Predictions</p>
-				</div>
-			</div>
-			<div class="row" id="nav-bar0">
-				<p>Choose Your Region!</p>
-			</div>
-			<hr>
-			<div class="row" id="nav-bar">
-				<div class="col-md-1" id="c1">
-					<a id='anc' href="/tt">India</a>
-				</div>
-				<div class="col-md-2" id="c2">
-					<p class="ni">North India</p>
-					<div class="dropni">
-						<a href="/jk">Jammu & Kashmir</a>
-						<a href="/ld">Ladakh</a>
-						<a href="/hp">Himachal Pradesh</a>
-						<a href="/ut">Uttarakand</a>
-						<a href="/ch">Chandigarh</a>
-						<a href="/dl">Delhi</a>
-						<a href="/hr">Haryana</a>
-						<a href="/pd">Punjab</a>
-						<a href="/up">Uttarpradesh</a>
-					</div>
-				</div>
-				<div class="col-md-2" id="c3">
-					<p class="si">South India</p>
-					<div class="dropsi">
-						<a href="/tn">Tamil Nadu</a>
-						<a href="/kl">Kerala</a>
-						<a href="/ap">Andhra Pradesh</a>
-						<a href="/tg">Telangana</a>
-						<a href="/ka">Karnataka</a>
-						<a href="/py">Pududcherry</a>
-						<a href="/la">Lakshwadeep</a>
-						<a href="/an">Andaman & Nicbar</a>
-					</div>
-				</div>
-				<div class="col-md-2" id="c4">
-					<p class="nei">North East India</p>
-					<div class="dropnei">
-						<a href="/sk">Sikkim</a>
-						<a href="/ar">Arunachal Pradesh</a>
-						<a href="/as">Assam</a>
-						<a href="/mn">Manipur</a>
-						<a href="/ml">Meghalaya</a>
-						<a href="/mz">Mizoram</a>
-						<a href="/nl">Nagaland</a>
-						<a href="/tr">Tripura</a>
-					</div>
-				</div>
-				<div class="col-md-2" id="c5">
-					<p class="wi">West India</p>
-					<div class="dropwi">
-						<a href="/dn">Dadra & Nagar haveli</a>
-						<a href="/dd">Daman & Diu</a>
-						<a href="/ga">Goa</a>
-						<a href="/gj">Gujarath</a>
-						<a href="/mh">Maharashtra</a>
-						<a href="/rj">Rajasthan</a>
-					</div>
-				</div>
-				<div class="col-md-3" id="c6">
-					<p class="ei">East & Central India</p>
-					<div class="dropei">
-						<a href="/mp">Madhya Pradesh</a>
-						<a href="/br">Bihar</a>
-						<a href="/ct">Chattisgarh</a>
-						<a href="/jh">Jarkhand</a>
-						<a href="/wb">WestBengal</a>
-						<a href="/or">Odisha</a>
-					</div>
-				</div>
-			</div>
-		</div>
-    <div class="col-md-3" id="col">
-			<img id="ind" src="https://lh3.googleusercontent.com/C4_iGhxNsSSwJvlo_2RuuxzCGVyEMtuhCTaVmGTNn5F1PFQFoh214a61X0kJdB0zaQgZvwAxyCiOFGOyF3jenp9HZNQ3vwSiOMRiq_-AEEtJR5Iw71KpjSxsMJhRaWegYtX1u7G4qj0">
-		</div>
+
 		<canvas id="chart" width="600" height="400"></canvas>
 		<canvas id="deceased" width="600" height="400"></canvas>
 		<canvas id="confirmed" width="600" height="400"></canvas>
@@ -135,25 +49,31 @@
 		    </div>
 		  </div>
 
-{{t}}
 <table id='ta'  class="table table-striped">
 <tr>
   <th>Date</th>
   <th>Original</th>
-  <th>predicted</th>
+  <th>Predicted</th>
+	<th>Deceased</th>
+	<th>Recovered</th>
 </tr>
     {%for i in range(r-10,r)%}
     <tr>
       <td>{{ da[i+1]}}</td>
       <td>{{or1[i]}}</td>
       <td>{{y[i]}}</td>
+			<td>{{dec[i]}}</td>
+			<td>{{rec[i]}}</td>
     </tr>
     {%endfor%}
     {% for i in range(r,l-1)%}
     <tr>
       <td>{{da[i+1]}}</td>
       <td>--</td>
-      <td>{{y[i]}}</td>
+			<td>{{y[i]}}</td>
+			<td>--</td>
+			<td>--</td>
+
     </tr>
     {%endfor%}
 </table>
