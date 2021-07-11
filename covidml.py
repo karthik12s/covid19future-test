@@ -26,7 +26,7 @@ def cost(ytt,st):
     co = 0
     for i in range(len(st)):
         co = co + (st[i]-ytt[i])*(st[i]-ytt[i])
-    return math.sqrt(co)
+    return round(math.sqrt(co))
 def date1(a):
     d = thres + timedelta(days = int(a[0]))
     d = str(d).split()[0]
@@ -123,7 +123,7 @@ def results():
             day = []
             for i in range(len(st)):
                 day.append(i)
-            x1 = np.arange(len(day)+15).reshape(-1,1)
+            x1 = np.arange(len(day)+30).reshape(-1,1)
             st = list(map(int,st))
 
             # Autoregression
@@ -172,8 +172,8 @@ def results():
             t1[name]=t
             max1[name]=max(max(ytt),max(st))
             day1 = x1
-            values[name]=ytt[::15]
-            values1[name]=st[::15]
+            values[name]=ytt[::30]
+            values1[name]=st[::30]
         t12[j] = t1
         ytt12[j] = ytt1
         st12[j]=st1
@@ -183,7 +183,7 @@ def results():
         values2[j]=values
         values12[j]=values1
         # print(max1)
-    return render_template("results.html",da=list(map(date1,x1)),labels=list(map(date1,x1))[::15],values=values2,max=max12,values1=values12,names = names,models = models,t = t12,regions={"tt":"India","tg":"Telangana","ap":"Andhra Pradesh"})
+    return render_template("results.html",da=list(map(date1,x1)),labels=list(map(date1,x1))[::30],values=values2,max=max12,values1=values12,names = names,models = models,t = t12,regions={"tt":"India","tg":"Telangana","ap":"Andhra Pradesh"})
 @app.route("/")
 @app.route("/<name>")
 def home(name=None):
@@ -198,7 +198,7 @@ def home(name=None):
             # st.append(c[i][name])
             day.append(i)
         day=(np.array(day)).reshape(-1,1)
-        x1=(np.arange(len(day)+15)).reshape(-1,1)
+        x1=(np.arange(len(day)+105)).reshape(-1,1)
         st=list(map(int,st))
 
         # for i in range(1,len(st)):
@@ -237,7 +237,7 @@ def home(name=None):
             if ytt[i]<0:
                 ytt[i]=0
         t= cost(ytt,st)
-        return render_template('new.html',da=list(map(date1,x1)),y=ytt,r=len(day),or1=st,l=len(x1),d1=x1,labels=list(map(date1,x1))[::15],values=ytt[::15],max=max(ytt),values1=st[::15],im=stateDict[name],sn=namesDict[name],wc=wc,p=ytt[len(c)-1],t=t,deceased = deceased[::15],dec_max = max(deceased),recovered = recovered[::15],rec_max = max(recovered),dec = deceased,rec = recovered)
+        return render_template('new.html',da=list(map(date1,x1)),y=ytt,r=len(day),or1=st,l=len(x1),d1=x1,labels=list(map(date1,x1))[::30],values=ytt[::30],max=max(ytt),values1=st[::30],im=stateDict[name],sn=namesDict[name],wc=wc,p=ytt[len(c)-1],t=t,deceased = deceased[::15],dec_max = max(deceased),recovered = recovered[::15],rec_max = max(recovered),dec = deceased,rec = recovered)
     else:
         return redirect(url_for('home'))
 
@@ -255,7 +255,7 @@ def pred():
                     st.append(c1[i])
                     day.append(i+75)
                 day=(np.array(day)).reshape(-1,1)
-                x1=(np.arange(75,len(day)+90)).reshape(-1,1)
+                x1=(np.arange(75,len(day)+105)).reshape(-1,1)
                 st=list(map(int,st))
                 for i in range(1,len(st)):
                     st[i]=st[i]+st[i-1]
