@@ -7,14 +7,23 @@
 {% endif %}
 {% endwith  %}
 {%for j in [1,2,3,4,5,6,7]%}
-{{models[j-1]}}
-
+<h1 class="d-block mx-auto text-light bg-dark">{{models[j-1]}}</h1>
+<div class="row w-100">
 {%for i in names%}
-<h1>{{t[j][i]}}</h1>
-<canvas id="chart{{i}}{{j}}" width="600" height="400"></canvas>
+
+<div class="col-4">
+  <h1 class="text-center text-info">{{regions[i]}}</h1>
+  <canvas id="chart{{i}}{{j}}" width="500" height="400"  ></canvas>
+  
+  <h5 class="text-center" >RMSE: {{t[j][i]}}</h5>
+</div>
+
+
+
 <!-- <p>{{max[i]}}</p> -->
 {%endfor%}
-<h1>----------------------------------------------------------------------</h1>
+</div>
+<hr style="border-top:10px dashed black ">
 {%endfor%}
 <script type="text/javascript">
   {%for j in [1,2,3,4,5,6,7]%}

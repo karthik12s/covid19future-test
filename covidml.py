@@ -183,7 +183,7 @@ def results():
         values2[j]=values
         values12[j]=values1
         # print(max1)
-    return render_template("results.html",da=list(map(date1,x1)),labels=list(map(date1,x1))[::15],values=values2,max=max12,values1=values12,names = names,models = models,t = t12)
+    return render_template("results.html",da=list(map(date1,x1)),labels=list(map(date1,x1))[::15],values=values2,max=max12,values1=values12,names = names,models = models,t = t12,regions={"tt":"India","tg":"Telangana","ap":"Andhra Pradesh"})
 @app.route("/")
 @app.route("/<name>")
 def home(name=None):
