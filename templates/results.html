@@ -6,8 +6,9 @@
 <p>{{messages[0]}}</p>
 {% endif %}
 {% endwith  %}
+<button type="button" class="btn btn-outline-primary"><a href="/">Home</a></button>
 {%for j in [1,2,3,4,5,6,7]%}
-<h1 class="d-block mx-auto text-light bg-dark">{{models[j-1]}}</h1>
+<h1 class="text-center d-block mx-auto text-primary ">{{models[j-1]}}</h1>
 <div class="row w-100">
 {%for i in names%}
 
@@ -23,7 +24,6 @@
 <!-- <p>{{max[i]}}</p> -->
 {%endfor%}
 </div>
-<hr style="border-top:10px dashed black ">
 {%endfor%}
 <script type="text/javascript">
   {%for j in [1,2,3,4,5,6,7]%}
