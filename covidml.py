@@ -10,6 +10,7 @@ from statsmodels.tsa.arima.model import ARIMA
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import PolynomialFeatures
+import sklearn
 import math
 wc=requests.get('https://api.covid19api.com/summary')
 wc=wc.json()
@@ -165,8 +166,22 @@ def results():
             ytt = list(ytt)
             for i in range(len(ytt)):
                 if ytt[i]<0:
-                    ytt[i]=0
-            t= cost(ytt,st)
+                    ytt[i]=1
+            # t= [cost(ytt,st)]
+            ytt13 = ytt[:len(st)]
+            t = [sklearn.metrics.explained_variance_score(ytt13,st)]
+            t.append(sklearn.metrics.max_error(ytt13,st))
+            t.append(sklearn.metrics.mean_absolute_error(ytt13,st))
+            t.append(sklearn.metrics.mean_squared_error(ytt13,st))
+            t.append(sklearn.metrics.mean_squared_error(ytt13,st))
+            t.append(sklearn.metrics.mean_squared_log_error(ytt13,st))
+            t.append(sklearn.metrics.median_absolute_error(ytt13,st))
+            t.append(sklearn.metrics.r2_score(ytt13,st))
+            # t.append(sklearn.metrics.mean_poisson_deviance(ytt13,st))
+            # t.append(sklearn.metrics.mean_gamma_deviance(ytt13,st))
+            # t.append(sklearn.metrics.mean_absolute_percentage_error(ytt13,st))
+            for k in range(len(t)):
+                t[k] = round(t[k],2)
             ytt1[name]=ytt
             st1[name]=st
             t1[name]=t
@@ -236,7 +251,7 @@ def home(name=None):
         for i in range(len(ytt)):
             if ytt[i]<0:
                 ytt[i]=0
-        t= cost(ytt,st)
+        t= [cost(ytt,st)]
         return render_template('new.html',da=list(map(date1,x1)),y=ytt,r=len(day),or1=st,l=len(x1),d1=x1,labels=list(map(date1,x1))[::30],values=ytt[::30],max=max(ytt),values1=st[::30],im=stateDict[name],sn=namesDict[name],wc=wc,p=ytt[len(c)-1],t=t,deceased = deceased[::15],dec_max = max(deceased),recovered = recovered[::15],rec_max = max(recovered),dec = deceased,rec = recovered)
     else:
         return redirect(url_for('home'))
