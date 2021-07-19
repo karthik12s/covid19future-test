@@ -7,23 +7,42 @@
 {% endif %}
 {% endwith  %}
 <button type="button" class="btn btn-outline-primary"><a href="/">Home</a></button>
-{%for j in [1,2,3,4,5,6,7]%}
-<h1 class="text-center d-block mx-auto text-primary ">{{models[j-1]}}</h1>
+<!-- <p>{{max}}</p> -->
 <div class="row w-100">
 {%for i in names%}
 
 <div class="col-4">
   <h1 class="text-center text-info">{{regions[i]}}</h1>
+  <canvas id="chart{{i}}" width="400" height="400"  ></canvas>
+  <h5 class="text-center" id="rmse{{i}}"></h5>
+</div>
+
+<!-- <p>{{max[i]}}</p> -->
+{%endfor%}
+</div>
+{%for j in [1,2,3,4,5,6,7]%}
+<h1 class="text-center d-block mx-auto text-primary "><button type="button" name="button" onclick="getcharts({{j}})">{{models[j-1]}}</button></h1>
+<div class="row w-100">
+{%for i in names%}
+
+<!-- <div class="col-4">
+  <h1 class="text-center text-info">{{regions[i]}}</h1>
   <canvas id="chart{{i}}{{j}}" width="400" height="400"  ></canvas>
 
   <h5 class="text-center" >RMSE: {{t[j][i]}}</h5>
-</div>
+</div> -->
 <!-- <p>{{max[i]}}</p> -->
 {%endfor%}
 </div>
 {%endfor%}
 <script type="text/javascript">
+  bar = {}
+  max = {}
+  rmse = {}
   {%for j in [1,2,3,4,5,6,7]%}
+  bar1 = {}
+  max1 = {}
+  rmse1 = {}
   {%for i in names%}
   var barData = {
     labels : [
@@ -71,17 +90,29 @@
   Chart.defaults.global.responsive = false;
   Chart.defaults.global.scaleLineColor = "black";
   Chart.defaults.global.scaleFontSize = 16;
-
+  bar1['{{i}}'] = barData;
+  max1['{{i}}'] = {{max[j][i]}};
+  rmse1['{{i}}'] = {{t[j][i]}}
+  {%endfor%}
+  bar[{{j}}] = bar1;
+  max[{{j}}] = max1;
+  rmse[{{j}}] = rmse1;
+  {%endfor%}
   // get bar chart canvas
-  var mychart = document.getElementById("chart{{i}}{{j}}").getContext("2d");
+  function getcharts(j){
+  {%for i in names%}
+  var rm = document.getElementById("rmse{{i}}");
+  rm.innerHTML = rmse[j]['{{i}}'];
+  var mychart = document.getElementById("chart{{i}}").getContext("2d");
 
   steps = 10;
-  max = {{ max[j][i] }};
+
+  max4 = max[j]['{{i}}'];
   // draw bar chart
-  var LineChartDemo = new Chart(mychart).Line(barData, {
+  var LineChartDemo = new Chart(mychart).Line(bar[j]['{{i}}'], {
     scaleOverride: true,
     scaleSteps: steps,
-    scaleStepWidth: Math.ceil(max / steps),
+    scaleStepWidth: Math.ceil(max4 / steps),
     scaleStartValue: 0,
     scaleShowVerticalLines: true,
     scaleShowGridLines : true,
@@ -100,7 +131,8 @@
    text: 'World population per region (in millions)'
   }
   });
-  {%endfor%}
-  {%endfor%}
+{%endfor%}
+}
+getcharts(0);
 </script>
 {%endblock%}

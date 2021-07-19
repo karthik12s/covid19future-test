@@ -14,7 +14,7 @@ import sklearn
 import math
 wc=requests.get('https://api.covid19api.com/summary')
 wc=wc.json()
-ind=wc['Countries'][76]
+# ind=wc['Countries'][76]
 s_d=pd.read_csv('https://api.covid19india.org/csv/latest/state_wise.csv')
 app=Flask(__name__)
 app.secret_key='abc'
@@ -238,12 +238,12 @@ def home(name=None):
         # print(len(ytt),len(x1))
         for i in range(len(ytt)):
             ytt[i]=int(ytt[i])
-        if name=='tt':
-            wc=[ind['TotalConfirmed'],ind['TotalDeaths'],ind['TotalRecovered'],ind['NewConfirmed']]
-        else:
-            for i in range(len(s_d)):
-                if s_d['State'][i]==s_keys[name]:
-                    wc=[s_d['Confirmed'][i],s_d['Deaths'][i],s_d['Recovered'][i],st[len(c)-1]]
+        # if name=='tt':
+        #     wc=[ind['TotalConfirmed'],ind['TotalDeaths'],ind['TotalRecovered'],ind['NewConfirmed']]
+        # else:
+        for i in range(len(s_d)):
+            if s_d['State'][i]==s_keys[name]:
+                wc=[s_d['Confirmed'][i],s_d['Deaths'][i],s_d['Recovered'][i],st[len(c)-1]]
 
         #ytt=list(map(int,ytt))
         # print(type(ytt))
