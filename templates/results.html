@@ -6,25 +6,96 @@
 <p>{{messages[0]}}</p>
 {% endif %}
 {% endwith  %}
-<button type="button" class="btn btn-outline-primary"><a href="/">Home</a></button>
+<button type="button" class="btn btn-outline-info"><a href="/">Home</a></button>
 <!-- <p>{{max}}</p> -->
-<div class="row w-100">
+<div class="row">
+  <div class="col-4">
+    <button class="btn btn-lg btn-outline-info text-center btn-block " onclick="getcharts(1)">{{models[0]}}</button>
+  </div>
+  <div class="col-4">
+    <button class="btn btn-lg btn-outline-info text-center btn-block" onclick="getcharts(2)">{{models[1]}}</button>
+  </div>
+  <div class="col-4">
+    <button class="btn btn-lg btn-outline-info text-center btn-block " onclick="getcharts(3)">{{models[2]}}</button>
+  </div>
+</div>
+<div class="row">
+  <div class="col-4">
+    <button class="btn btn-lg btn-outline-info text-center btn-block" onclick="getcharts(4)">{{models[3]}}</button>
+  </div>
+  <div class="col-4">
+    <button class="btn btn-lg btn-outline-info text-center btn-block" onclick="getcharts(5)">{{models[4]}}</button>
+  </div>
+  <div class="col-4">
+    <button class="btn btn-lg btn-outline-info text-center btn-block" onclick="getcharts(6)">{{models[5]}}</button>
+  </div>
+</div>
+<div class="row">
+  <div class="col-6">
+    <button class="btn btn-lg btn-outline-info text-center btn-block" onclick="getcharts(7)">{{models[6]}}</button>
+  </div>
+</div>
+<h1 id="mname" class="text-center text-light bg-dark py-2"></h1>
+<div class="row">
+  <div class="col-6">
+    <h1 class="text-center text-info">{{regions['tt']}}</h1>
+    <canvas id="charttt" width="400" height="400" ></canvas>
+    
+  </div>
+  <div class="col-6">
+    <h1 class="text-center text-info">{{regions['tg']}}</h1>
+    <canvas id="charttg" width="400" height="400" ></canvas>
+    
+  </div>
+</div>
+<div class="row">
+  <div class="col-6">
+    <h1 class="text-center text-info ">{{regions['ap']}}</h1>
+    <canvas id="chartap" width="400" height="400" ></canvas>
+    
+  </div>
+  <div class="col-6">
+    <table class="table table-hover" id="myTable">
+      
+    </table>
+    <h6><span style="color: red;">*</span>Error units: No.of Cases</h6>
+  </div>
+  
+</div>
+
+
+
+<!-- <div class="row">
+  <div class="col-6">
+    <div class="d-flex flex-column">
+    
 {%for i in names%}
 
-<div class="col-4">
+<div class="">
   <h1 class="text-center text-info">{{regions[i]}}</h1>
-  <canvas id="chart{{i}}" width="400" height="400"  ></canvas>
+  <canvas id="chart{{i}}" width="400" height="400" ></canvas>
   <h5 class="text-center" id="rmse{{i}}"></h5>
 </div>
+</div>
+</div>
+ -->
+
+
 
 <!-- <p>{{max[i]}}</p> -->
-{%endfor%}
-</div>
-{%for j in [1,2,3,4,5,6,7]%}
-<h1 class="text-center d-block mx-auto text-primary "><button type="button" name="button" onclick="getcharts({{j}})">{{models[j-1]}}</button></h1>
-<div class="row w-100">
-{%for i in names%}
+<!-- {%endfor%}
+</div> -->
 
+<!-- <div class="row">
+{%for j in [1,2,3,4,5,6,7]%}
+
+  
+  <button class="btn btn-lg btn-outline-info text-center col-2" onclick="getcharts({{j}})">{{models[j-1]}}</button> -->
+  
+  <!-- <h1 class="text-center d-block mx-auto text-primary "><button type="button" name="button" onclick="getcharts({{j}})">{{models[j-1]}}</button></h1> -->
+
+<!-- {%for i in names%}
+</div> -->
 <!-- <div class="col-4">
   <h1 class="text-center text-info">{{regions[i]}}</h1>
   <canvas id="chart{{i}}{{j}}" width="400" height="400"  ></canvas>
@@ -32,17 +103,19 @@
   <h5 class="text-center" >RMSE: {{t[j][i]}}</h5>
 </div> -->
 <!-- <p>{{max[i]}}</p> -->
+<!-- {%endfor%}
 {%endfor%}
-</div>
-{%endfor%}
+</div> -->
 <script type="text/javascript">
   bar = {}
   max = {}
   rmse = {}
+  models={}
   {%for j in [1,2,3,4,5,6,7]%}
   bar1 = {}
   max1 = {}
   rmse1 = {}
+  models[{{j}}]='{{models[j-1]}}'
   {%for i in names%}
   var barData = {
     labels : [
@@ -101,11 +174,47 @@
   // get bar chart canvas
   function getcharts(j){
   {%for i in names%}
-  var rm = document.getElementById("rmse{{i}}");
-  rm.innerHTML = rmse[j]['{{i}}'];
-  var mychart = document.getElementById("chart{{i}}").getContext("2d");
+//  rm.innerHTML = rmse[j]['{{i}}'];
+   var mychart = document.getElementById("chart{{i}}").getContext("2d");
+  var mname=document.getElementById("mname");
+  mname.innerHTML=models[j];
 
   steps = 10;
+
+  var Parent = document.getElementById("myTable");
+  while(Parent.hasChildNodes())
+        {
+          Parent.removeChild(Parent.firstChild);
+        }
+        var row = Parent.insertRow(-1);
+            
+        var headerCell = document.createElement("TH");
+        headerCell.innerHTML = "Metrics";
+        row.appendChild(headerCell);
+        var headerCell = document.createElement("TH");
+        headerCell.innerHTML = "India";
+        row.appendChild(headerCell);
+        var headerCell = document.createElement("TH");
+        headerCell.innerHTML = "Telangana";
+        row.appendChild(headerCell);
+        var headerCell = document.createElement("TH");
+        headerCell.innerHTML = "Andhra Pradesh";
+        row.appendChild(headerCell);
+
+
+        {%for i in [1,2,3,4,5,6,7]%}
+        var row = Parent.insertRow(-1);
+        var cell1 = row.insertCell(0);
+         var cell2 = row.insertCell(1);
+         var cell3 = row.insertCell(2);
+         var cell4 = row.insertCell(3);
+
+         cell1.innerText="{{met[i-1]}}";
+         cell2.innerText=rmse[j]['tt'][{{i}}];
+         cell3.innerText=rmse[j]['tg'][{{i}}];
+         cell4.innerText=rmse[j]['ap'][{{i}}];
+    {%endfor%}
+ 
 
   max4 = max[j]['{{i}}'];
   // draw bar chart
@@ -133,6 +242,6 @@
   });
 {%endfor%}
 }
-getcharts(0);
+getcharts(1);
 </script>
 {%endblock%}

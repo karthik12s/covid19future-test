@@ -14,7 +14,7 @@ import sklearn
 import math
 wc=requests.get('https://api.covid19api.com/summary')
 wc=wc.json()
-# ind=wc['Countries'][76]
+ind=wc['Countries'][76]
 s_d=pd.read_csv('https://api.covid19india.org/csv/latest/state_wise.csv')
 app=Flask(__name__)
 app.secret_key='abc'
@@ -198,7 +198,8 @@ def results():
         values2[j]=values
         values12[j]=values1
         # print(max1)
-    return render_template("results.html",da=list(map(date1,x1)),labels=list(map(date1,x1))[::30],values=values2,max=max12,values1=values12,names = names,models = models,t = t12,regions={"tt":"India","tg":"Telangana","ap":"Andhra Pradesh"})
+    met=['Variance Score','Max Error','Mean Absolute Error','Mean Squared Error','Mean Squared Log Error','Median Absolute Error','R2 Score']
+    return render_template("results.html",da=list(map(date1,x1)),labels=list(map(date1,x1))[::30],values=values2,max=max12,values1=values12,names = names,models = models,t = t12,regions={"tt":"India","tg":"Telangana","ap":"Andhra Pradesh"},met=met)
 @app.route("/")
 @app.route("/<name>")
 def home(name=None):
@@ -213,7 +214,7 @@ def home(name=None):
             # st.append(c[i][name])
             day.append(i)
         day=(np.array(day)).reshape(-1,1)
-        x1=(np.arange(len(day)+105)).reshape(-1,1)
+        x1=(np.arange(len(day)+30)).reshape(-1,1)
         st=list(map(int,st))
 
         # for i in range(1,len(st)):
@@ -238,12 +239,12 @@ def home(name=None):
         # print(len(ytt),len(x1))
         for i in range(len(ytt)):
             ytt[i]=int(ytt[i])
-        # if name=='tt':
-        #     wc=[ind['TotalConfirmed'],ind['TotalDeaths'],ind['TotalRecovered'],ind['NewConfirmed']]
-        # else:
-        for i in range(len(s_d)):
-            if s_d['State'][i]==s_keys[name]:
-                wc=[s_d['Confirmed'][i],s_d['Deaths'][i],s_d['Recovered'][i],st[len(c)-1]]
+        if name=='tt':
+            wc=[ind['TotalConfirmed'],ind['TotalDeaths'],ind['TotalRecovered'],ind['NewConfirmed']]
+        else:
+            for i in range(len(s_d)):
+                if s_d['State'][i]==s_keys[name]:
+                    wc=[s_d['Confirmed'][i],s_d['Deaths'][i],s_d['Recovered'][i],st[len(c)-1]]
 
         #ytt=list(map(int,ytt))
         # print(type(ytt))
